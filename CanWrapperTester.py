@@ -20,7 +20,7 @@ def handleTxFrame(message):
     print("Sent message"+str(message)+ "\n")    
 
 def main():
-    canwrapper = CanWrapper(can_interface_name='can0')
+    canwrapper = CanWrapper(can_interface_name='can0',BaudRate=100000)
     canwrapper.open()
     canwrapper.setReceiveHandler(handleRxFrame_1)
     #bus = can.interface.Bus(channel='can0', bustype='socketcan_native')
@@ -38,12 +38,12 @@ def main():
     canwrapper.open()
     canwrapper.setReceiveHandler(handleRxFrame_2)
     canwrapper.setSentHandler(handleTxFrame)
-    i=5
+    i=50000000000
     while(i>0) :
         try:
             i=i-1
             canwrapper.sendMessage(msg)
-            time.sleep(1)
+            time.sleep(0.01)
         except BaseException as e:
             logging.error("Error sending can message {%s}: %s" % (msg, e))
     

@@ -2,18 +2,26 @@ import can
 import time
 import logging
 import threading
+import os 
 
 class CanWrapper ():
 
-    def __init__(self , can_interface_name='can0', can_bus_type='socketcan_native'):
+    def __init__(self , can_interface_name='can0', can_bus_type='socketcan_native', BaudRate=100000):
     
         self.can_interface_name = can_interface_name
         self.can_bus_type = can_bus_type
         self.isRunning=True
-        self.FrameSentdHandeler = None 
+        self.FrameSentdHandeler = None
+        self.BaudRate = BaudRate
         
         
     def open(self ):
+        #/*down*/
+        command = "sudo ip link set "+ self.can_interface_name +" down"
+        os.system(command)
+        #/*configure*/
+        command =  "sudo ip link set "+ self.can_interface_name +" up type can bitrate " + str(self.BaudRate)
+        os.system(command)
         self.bus = can.interface.Bus(channel=self.can_interface_name, bustype=self.can_bus_type)
         self.isRunning=True
         
